@@ -70,10 +70,6 @@ void Perceptron::toOstream(){
 }
 
 void Perceptron::updateWeights() {
-    for(size_t i = 0; i< fW.size(); i++) {
-    fW_stored[i]=fW[i];
-    }
-
     fW[0]+=-fLearningRate*fdelta;
     for(size_t i = 1; i< fW.size(); i++){
         fW[i] += -fLearningRate * fdelta * fInputs[i];
@@ -81,9 +77,17 @@ void Perceptron::updateWeights() {
     fStatus = kReady;
 }
 
-void Perceptron::restoreWeights(){
-    //std::copy(fW_stored.begin(),fW_stored.end(),fW.begin());
+void Perceptron::freeze() {
+    fW_stored.clear();
     for(size_t i = 0; i< fW.size(); i++) {
-        fW[i]=fW_stored[i];
+        fW_stored.push_back(fW[i]);
+    }
+}
+
+void Perceptron::restoreWeights(){
+    fW.clear();
+    //std::copy(fW_stored.begin(),fW_stored.end(),fW.begin());
+    for(size_t i = 0; i< fW_stored.size(); i++) {
+        fW.push_back(fW_stored[i]);
     }
 }

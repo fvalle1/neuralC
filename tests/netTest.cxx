@@ -48,7 +48,7 @@ TEST(net_Test, net_test_train) {
     EXPECT_EQ(0, 0);
 }
 
-std::function<double (std::vector<double>)> targetf =  [](std::vector<double> x){return (x[0] + 2*x[1] >0?-1:1);};
+std::function<double (std::vector<double>)> targetf =  [](std::vector<double> x){return (x[0] - x[1] >0?-1:1);};
 NeuralNet createandtrain(){
     std::vector<std::vector<double>> X;
     std::vector<double> y;
@@ -62,9 +62,9 @@ NeuralNet createandtrain(){
         }
     }
     NeuralNet net;
-    net.firstLayer(3, X).addLayer(5).lastLayer(y);
+    net.firstLayer(4, X).addLayer(3).lastLayer(y);
     net.train();
-    printf("\nAccuracy of the net: %f",net.getInSampleError());
+    printf("\nAccuracy of the net: %1.2f", net.getAccurancy());
     return net;
 }
 

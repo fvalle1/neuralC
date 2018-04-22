@@ -4,7 +4,7 @@
 
 #include "NeuralNet.h"
 
-NeuralNet::NeuralNet() : fDepth(0), fmaxiterations(5000), fLearningRate(0.1), fEpsilon(0.00001){
+NeuralNet::NeuralNet() : fDepth(0), fmaxiterations(5000), fLearningRate(0.1), fEpsilon(0.001){
 
 }
 
@@ -52,7 +52,10 @@ NeuralNet & NeuralNet::train() {
         backPropagate(iData);
 
         //update
-        for (auto &layer: fLayers) {layer.updateWeigths();}
+        for (auto &layer: fLayers) {
+            layer.updateWeigths();
+            layer.freeze();
+        }
 
         error = getInSampleError();
         if(step>0) {
@@ -61,12 +64,15 @@ NeuralNet & NeuralNet::train() {
                 for (auto &layer: fLayers) {layer.restoreWeigths(); }
                 continue;
             }
-            if ((fError - error) < fEpsilon) break;
+            if ((fError - error) < fEpsilon) {
+                printf("\nFinal steps: %llu\t\tError: %.4f", step, error);
+                break;
+            }
         }
 
         fError = error;
+        printf("\nstep: %llu/%llu\t\tError: %.4f", step, fmaxiterations, error);
 
-        printf("\nstep: %llu/%llu\t\tError: %f", step, fmaxiterations, error);
     }
 
     return *this;
@@ -83,6 +89,16 @@ double NeuralNet::getInSampleError() {
     error*=1./(double)fX.size();
     return error;
 }
+
+double NeuralNet::getAccurancy() {
+    uint64_t guessed = 0;
+    for(int iData=0; iData < fX.size(); iData++){
+        if(fabs(infere(fX[iData])-fy[iData]) < fEpsilon) guessed++;
+    }
+    //printf("guessed: %llu",guessed);
+    return (double_t) guessed/(double)fX.size();
+}
+
 
 void NeuralNet::backPropagate(uint64_t iData) {
     double deltaLast = 0.;
@@ -142,4 +158,3 @@ NeuralNet & NeuralNet::toOstream() {
 
     return *this;
 }
-

@@ -18,6 +18,7 @@ public:
 
     void updateWeigths();
     void restoreWeigths();
+    void freeze();
     void toOstream();
 
     inline Perceptron &operator[](uint64_t neuron){return fNeurons[neuron];};

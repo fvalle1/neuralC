@@ -20,6 +20,8 @@ public:
 
     double infere(std::vector<double> &X, bool continuos = false);
     double getInSampleError();
+    double getAccurancy();
+
 
     uint64_t fmaxiterations;
 private:
