@@ -53,3 +53,9 @@ void Layer::freeze() {
         neuron.freeze();
     }
 }
+
+void Layer::reset() {
+    for(auto &neuron : fNeurons){
+        neuron.reset();
+    }
+}

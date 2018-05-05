@@ -12,7 +12,7 @@
 #include <random>
 #include <cmath>
 
-#include "pcg_random.hpp"
+#include "pcg/pcg_random.hpp"
 
 enum PerceptronStatuses{
     kReady,
@@ -34,6 +34,7 @@ public:
     void updateWeights();
     void restoreWeights();
     void freeze();
+    void reset();
     void fit();
     void predict(std::vector<double> X);
     void toOstream();
@@ -54,6 +55,7 @@ public:
 private:
     PerceptronStatuses fStatus;
 
+    pcg32 fRNG;
     double fSignal;
     double fX; //theta of (fSignal)
     double fThetaprime; //theta_d of (fSignal)

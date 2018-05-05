@@ -10,6 +10,9 @@ cmake-build-debug/
 *.py
 
 *.o
+*.d
+*.so
+*.pcm
 *.out
 
 CMakeFiles/
@@ -24,5 +27,5 @@ tests/net_test
 NeuralNet
 
 *.a
-
+*.csv
 tests/lib/googletest-master/googlemock/

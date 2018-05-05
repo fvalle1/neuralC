@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(
         .
         pcg/.
+        ~/root/include/
 )
 
 add_executable(NeuralNet
@@ -15,4 +16,11 @@ add_executable(NeuralNet
         Perceptron.cxx
         )
 
-add_subdirectory(tests/)
+add_executable(plotter
+        NeuralAnalyzer.cxx
+        run_plot.cxx
+)
+
+add_subdirectory(
+        tests/
+)

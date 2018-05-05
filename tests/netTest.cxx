@@ -121,3 +121,12 @@ TEST(net_Test, net_test_full_negative){
     output=output>0?-1:1;
     EXPECT_EQ(output, targetf(x_test));
 }
+
+TEST(net_Test, net_Test_file){
+    NeuralNet net;
+    net.firstLayer(15,"dataset.csv").addLayer(5).lastLayer("target.csv");
+    net.train();
+    net.infere("test.csv");
+
+    EXPECT_TRUE(true);
+}

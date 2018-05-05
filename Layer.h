@@ -19,12 +19,16 @@ public:
     void updateWeigths();
     void restoreWeigths();
     void freeze();
+    void reset();
     void toOstream();
 
     inline Perceptron &operator[](uint64_t neuron){return fNeurons[neuron];};
 private:
     uint64_t fnumOfNeurons;
 };
+
+
+
 
 class InputLayer: public Layer{
 public:

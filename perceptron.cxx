@@ -14,7 +14,7 @@ Perceptron::Perceptron(uint64_t id, uint64_t numOfFeatures, theta_function theta
         fTheta(theta),
         fTheta_d(theta_d)
 {
-    pcg32 myRng(seed, stream);
+    fRNG = pcg32(seed, stream);
     std::uniform_real_distribution<double> distribution(-0.5,0.5);
 
     fW.reserve(fNumOfFeatures+1);
@@ -23,7 +23,7 @@ Perceptron::Perceptron(uint64_t id, uint64_t numOfFeatures, theta_function theta
 
     //add vapnick dimension and random init w
     for(int i=0;i<fNumOfFeatures+1;i++){
-        fW.push_back(distribution(myRng));
+        fW.push_back(distribution(fRNG));
     }
 }
 
@@ -81,6 +81,13 @@ void Perceptron::freeze() {
     fW_stored.clear();
     for(size_t i = 0; i< fW.size(); i++) {
         fW_stored.push_back(fW[i]);
+    }
+}
+
+void Perceptron::reset() {
+    std::uniform_real_distribution<double> distribution(-0.5,0.5);
+    for(int i=0;i<fNumOfFeatures+1;i++){
+        fW.push_back(distribution(fRNG));
     }
 }
 
