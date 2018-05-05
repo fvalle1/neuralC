@@ -220,7 +220,7 @@ double NeuralNet::infere(datatype &X, bool continuos) {
     }else{
         std::cerr<<"Net not trained"<<std::endl;
         train();
-        infere(X, continuos);
+        return infere(X, continuos);
     }
 
     if(continuos) return output;

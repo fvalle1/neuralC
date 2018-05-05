@@ -2,7 +2,7 @@
 // Created by Filippo Valle on 01/05/2018.
 //
 
-#include "NeuralAnalyzer.h"
+#include "NeuralAnalyzer/NeuralAnalyzer.h"
 #include "TMultiGraph.h"
 #include "TCanvas.h"
 

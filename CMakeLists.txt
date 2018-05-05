@@ -16,11 +16,9 @@ add_executable(NeuralNet
         Perceptron.cxx
         )
 
-add_executable(plotter
-        NeuralAnalyzer.cxx
-        run_plot.cxx
-)
 
-add_subdirectory(
-        tests/
-)
+
+add_subdirectory(tests/)
+
+add_subdirectory(NeuralAnalyzer/)
+add_subdirectory(XRayMachine/)

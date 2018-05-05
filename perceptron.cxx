@@ -22,7 +22,7 @@ Perceptron::Perceptron(uint64_t id, uint64_t numOfFeatures, theta_function theta
 
 
     //add vapnick dimension and random init w
-    for(int i=0;i<fNumOfFeatures+1;i++){
+    for(uint64_t i=0;i<fNumOfFeatures+1;i++){
         fW.push_back(distribution(fRNG));
     }
 }
@@ -60,11 +60,6 @@ double Perceptron::getOutputtheta_d() {
     return fThetaprime;
 }
 
-void Perceptron::predict(std::vector<double> X) {
-    if (fStatus < 2) fit();
-//TODO
-}
-
 void Perceptron::toOstream(){
     printf("neuron id: %llu\n",fID);
 }
@@ -86,7 +81,7 @@ void Perceptron::freeze() {
 
 void Perceptron::reset() {
     std::uniform_real_distribution<double> distribution(-0.5,0.5);
-    for(int i=0;i<fNumOfFeatures+1;i++){
+    for(uint64_t i=0;i<fNumOfFeatures+1;i++){
         fW.push_back(distribution(fRNG));
     }
 }

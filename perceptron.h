@@ -27,6 +27,7 @@ typedef std::vector<double> datatype;
 
 class Perceptron {
 public:
+    inline Perceptron(){};
     Perceptron(uint64_t id, uint64_t numOfFeatures, theta_function theta, theta_function theta_d,
                    double learningRate, uint64_t seed, uint64_t stream);
 
@@ -36,7 +37,7 @@ public:
     void freeze();
     void reset();
     void fit();
-    void predict(std::vector<double> X);
+
     void toOstream();
     inline void setDelta(double delta){fdelta = delta;};
 
