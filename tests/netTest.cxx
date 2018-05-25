@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 #include "NeuralNet.h"
-#include <iostream>
 
 using std::vector;
 
@@ -43,7 +42,7 @@ TEST(net_Test, net_test_train) {
         y.push_back(i<5);
     }
     net.firstLayer(3,X).addLayer(2).lastLayer(y).toOstream();
-    net.train();
+    net.train(false);
 
     EXPECT_EQ(0, 0);
 }
@@ -63,8 +62,7 @@ NeuralNet createandtrain(){
     }
     NeuralNet net;
     net.firstLayer(4, X).addLayer(3).lastLayer(y);
-    net.train();
-    printf("\nAccuracy of the net: %1.2f", net.getAccurancy());
+    net.train(false);
     return net;
 }
 
@@ -125,7 +123,7 @@ TEST(net_Test, net_test_full_negative){
 TEST(net_Test, net_Test_file){
     NeuralNet net;
     net.firstLayer(15,"dataset.csv").addLayer(5).lastLayer("target.csv");
-    net.train();
+    net.train(false);
     net.infere("test.csv");
 
     EXPECT_TRUE(true);

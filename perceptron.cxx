@@ -80,7 +80,9 @@ void Perceptron::freeze() {
 }
 
 void Perceptron::reset() {
-    std::uniform_real_distribution<double> distribution(-0.5,0.5);
+    std::uniform_real_distribution<double> distribution(-1,1);
+    fW.clear();
+    fW.reserve(fNumOfFeatures+1);
     for(uint64_t i=0;i<fNumOfFeatures+1;i++){
         fW.push_back(distribution(fRNG));
     }

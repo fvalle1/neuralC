@@ -19,6 +19,7 @@ add_executable(xray
         ${CMAKE_SOURCE_DIR}/Perceptron.cxx
         ${CMAKE_SOURCE_DIR}/Layer.cxx
         ${CMAKE_SOURCE_DIR}/NeuralNet.cxx
+        ${CMAKE_SOURCE_DIR}/run_xray.cxx
         ${CMAKE_SOURCE_DIR}/Mainroot.cxx
         )
 

@@ -3,24 +3,29 @@
 //
 
 #include "NeuralAnalyzer/NeuralAnalyzer.h"
-#include "TMultiGraph.h"
-#include "TCanvas.h"
+#include "TAxis.h"
 
 int run_plot(){
-    auto cx=new TCanvas("Neural net");
-    auto *p = new NeuralAnalyzer();
-    p->GenerateDataset();
+    auto cx=new TCanvas("net", "Neural net", 10, 10, 640, 480);
+    auto *analyser = new NeuralAnalyzer();
 
-    auto dataset = p->GetDataset();
-    auto test = p->GenerateTest();
-    auto results = p->GetResults();
+    auto dataset = analyser->GetDataset();
+    auto test = analyser->GenerateTest();
+    auto results = analyser->GetResults();
     cx->cd();
 
     auto graph=new TMultiGraph();
+    //graph->Add(dataset);
     graph->Add(results);
-    graph->Add(dataset);
     graph->Add(test);
     graph->Draw("AP");
+
+    auto cy = new TCanvas("err", "Error", 650, 10, 640, 480);
+    auto eplot = analyser->GetErrorGraph();
+    cy->cd();
+    eplot->Draw("AP");
+    eplot->GetYaxis()->SetTitle("Error");
+    eplot->GetXaxis()->SetTitle("epoch");
 
     return 0;
 }

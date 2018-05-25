@@ -11,16 +11,23 @@
 #include "TCanvas.h"
 #include "TRandom.h"
 
+namespace datasets {
+    enum datasetType {
+        kGauss,
+        kCircle
+    };
+}
 
 class NeuralAnalyzer{
 public:
-    NeuralAnalyzer();
+    NeuralAnalyzer(datasets::datasetType type = datasets::kGauss);
 
-    void GenerateDataset();
+    void DatasetToFile();
 
-    inline TMultiGraph* GetDataset(){return fDatasetGraph;};
+    TMultiGraph* GetDataset();
     TGraph* GenerateTest();
     TMultiGraph * GetResults();
+    TGraph *GetErrorGraph();
 
 
 private:
@@ -31,10 +38,13 @@ private:
     TRandom* frandom;
 
     TMultiGraph *fDatasetGraph;
-    TGraph *fTestGraph;
     TMultiGraph *fResultsGraph;
+    TGraph *fTestGraph;
+    TGraph *fErrorGraph;
+    datasets::datasetType fType;
 
 
+    void ReadFromFile(TGraph **g, std::string Xdata, std::string Ydata);
 };
 
 #endif

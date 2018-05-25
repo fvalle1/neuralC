@@ -7,12 +7,23 @@
 NeuralNet::NeuralNet() :
         fDepth(0),
         fmaxiterations(5000),
-        fLearningRate(0.1),
+        fLearningRate(0.05),
         fEpsilon(0.001),
-        fNinit(100),
+        fNinit(1000),
+        fBatchSize(100),
         fStatus(net::netStatuses::kReady){
 
 }
+
+NeuralNet::NeuralNet(uint64_t iterations, double_t learningrate, double_t epsilon, uint64_t ninit,
+                     uint64_t batchsize) : fDepth(0), fStatus(net::netStatuses::kReady){
+        fmaxiterations=iterations;
+        fLearningRate=learningrate;
+        fEpsilon=epsilon;
+        fNinit=ninit;
+        fBatchSize=batchsize;
+}
+
 
 
 NeuralNet &NeuralNet::firstLayer(uint64_t numOfNeurons, const std::vector<datatype> &input) {
@@ -85,64 +96,89 @@ NeuralNet &NeuralNet::lastLayer(std::string targetfilename) {
     return lastLayer(output);
 }
 
-NeuralNet & NeuralNet::train() {
+NeuralNet & NeuralNet::train(bool storeErrordata) {
     if(fStatus<1){
         std::cerr<<"Dataset not loaded" <<std::endl;
         return *this;
     }
+
+    fStatus = net::netStatuses::kTrained;
+
+    clearErrorFile();
+
     double error;
-    uint8_t ninit=0;
+    uint8_t ninit = 0;
+    uint64_t nskipped = 0;
     std::random_device rd;
     std::default_random_engine e1(rd());
     std::uniform_int_distribution<uint64_t > uniform_dist(0, fX.size()-1);
     for (uint64_t step = 0; step < fmaxiterations; step++) {
         //uint64_t iData = step % fX[0].size();
         uint64_t iData = uniform_dist(e1);
-        auto data = fX[iData];
-        //fwd propagate
-        propagate(data);
 
-        //backpropagate
-        backPropagate(iData);
-
-        //update
+        //freeze
         for (auto &layer: fLayers) {
-            layer.updateWeigths();
             layer.freeze();
         }
 
-        error = getInSampleError();
-        if(step>0) {
-            if (error > fError) {
-                //printf("\n errore:%f", error);
-                for (auto &layer: fLayers) {layer.restoreWeigths(); }
-                continue;
+        for(uint64_t iBatch = iData; iBatch < fBatchSize; iBatch++) {
+            auto data = fX[iBatch%fX.size()];
+
+            //fwd propagate
+            propagate(data);
+
+            //backpropagate
+            backPropagate(iData);
+
+            //update
+            for (auto &layer: fLayers) {
+                layer.updateWeigths();
             }
-            if (((error - fError) < fEpsilon)) {
-                if(ninit<fNinit){
-                    printf("\rREINIT weights at step: %llu\t\tError: %.4f", step, error);
-                    reset();
-                    ninit++;
-                }else {
-                    printf("\nFinal steps: %llu\t\tError: %.4f", step, error);
+        }
+
+        error = getInSampleError();
+
+        printf("\nstep: %llu/%llu\t\tError: %.6f %.6f\t\t", step, fmaxiterations, fError, error);
+        if(step>0) {
+            if (error > fError + fEpsilon) {
+                if (ninit < fNinit && nskipped > 50) {
+                    if (getAccurancy() < 0.4) {
+                        printf(" REINIT WEIGHTS");
+                        reset();
+                        ninit++;
+                        nskipped = 0;
+                        continue;
+                    }
+                }
+
+                //printf("\n errore:%f", error);
+                for (auto &layer: fLayers) { layer.restoreWeigths(); }
+                printf(" SKIPPING");
+                nskipped++;
+                continue;
+
+            }else if (std::fabs(fError - error) < fEpsilon ) {
+                if (getAccurancy() > 0.8) {
+                    printf("\nFinal steps: %llu\tError: %.4f\n\n", step, error);
                     break;
                 }
             }
         }
 
         fError = error;
-        printf("\nstep: %llu/%llu\t\tError: %.4f", step, fmaxiterations, fError);
+        if (storeErrordata) addErrorToFile(fError);
 
     }
 
-    fStatus = net::netStatuses::kTrained;
+    printf("\n*********\nTrained\n");
+    printf("\nAccuracy of the net: %1.2f\n\n", getAccurancy());
     return *this;
 }
 
 
 double NeuralNet::getInSampleError() {
     double_t error = 0.;
-    for(int iData=0; iData < fX.size(); iData++){
+    for(uint64_t iData=0; iData < fX.size(); iData++){
         propagate(fX[iData]);
         //printf("\n%f\t%f    %d",fLayers[fDepth][0].getOutputX(), fy[iData], iData );
         error+= (fLayers[fDepth][0].getOutputX()-fy[iData]) * (fLayers[fDepth][0].getOutputX()-fy[iData]);
@@ -153,7 +189,7 @@ double NeuralNet::getInSampleError() {
 
 double NeuralNet::getAccurancy() {
     uint64_t guessed = 0;
-    for(int iData=0; iData < fX.size(); iData++){
+    for(uint64_t iData=0; iData < fX.size(); iData++){
         if(fabs(infere(fX[iData])-fy[iData]) < fEpsilon) guessed++;
     }
     //printf("guessed: %llu",guessed);
@@ -204,7 +240,7 @@ void NeuralNet::propagate(const datatype &data) {
 }
 
 double NeuralNet::infere(datatype &X, bool continuos) {
-    double output;
+    double output = 0;
 
     if(fStatus==net::netStatuses::kTrained) {
         auto it = fCache.find(X);
@@ -219,8 +255,7 @@ double NeuralNet::infere(datatype &X, bool continuos) {
         }
     }else{
         std::cerr<<"Net not trained"<<std::endl;
-        train();
-        return infere(X, continuos);
+        return output;
     }
 
     if(continuos) return output;
@@ -272,4 +307,17 @@ void NeuralNet::reset() {
     for(auto &layer : fLayers){
         layer.reset();
     }
+}
+
+void NeuralNet::clearErrorFile() {
+    std::fstream errorfile("errors.csv", std::ios::out);
+
+    errorfile.close();
+}
+
+
+void NeuralNet::addErrorToFile(double error) {
+    std::fstream errorfile("errors.csv", std::ios::app);
+    errorfile<<error<<"\n";
+    errorfile.close();
 }

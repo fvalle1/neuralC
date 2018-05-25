@@ -17,6 +17,7 @@ include_directories(
 
 add_executable(plotter
         NeuralAnalyzer.cxx
+        ${CMAKE_SOURCE_DIR}/run_dataset.cxx
         ${CMAKE_SOURCE_DIR}/run_plot.cxx
         ${CMAKE_SOURCE_DIR}/Mainroot.cxx
         )
