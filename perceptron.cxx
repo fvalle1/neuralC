@@ -17,9 +17,12 @@ Perceptron::Perceptron(uint64_t id, uint64_t numOfFeatures, theta_function theta
     fRNG = pcg32(seed, stream);
     std::uniform_real_distribution<double> distribution(-0.5,0.5);
 
+//    std::random_device rd;
+//    std::default_random_engine e1(rd());
+//    std::uniform_real_distribution<double> distribution(-1, 1);
+
     fW.reserve(fNumOfFeatures+1);
     fW_stored.reserve(fNumOfFeatures+1);
-
 
     //add vapnick dimension and random init w
     for(uint64_t i=0;i<fNumOfFeatures+1;i++){

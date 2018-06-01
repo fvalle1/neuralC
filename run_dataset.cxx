@@ -6,7 +6,7 @@
 
 int run_dataset(){
     auto cx=new TCanvas("cx", "Neural net");
-    auto *analyser = new NeuralAnalyzer(datasets::kCircle);
+    auto *analyser = new NeuralAnalyzer(datasets::kConcentricCircle);
     analyser->DatasetToFile();
 
     auto dataset = analyser->GetDataset();

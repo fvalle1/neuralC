@@ -29,3 +29,5 @@ NeuralNet
 *.a
 *.csv
 tests/lib/googletest-master/googlemock/
+
+*.pdf

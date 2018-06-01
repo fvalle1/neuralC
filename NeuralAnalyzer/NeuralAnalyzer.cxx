@@ -26,6 +26,7 @@ void NeuralAnalyzer::Fill() {
 
     switch (fType) {
         case datasets::kGauss:
+            N=200;
             for (auto i = 0; i < N; ++i) {
                 std::vector<double> x;
                 auto x1=frandom->Gaus(0.2, 0.35);
@@ -50,16 +51,37 @@ void NeuralAnalyzer::Fill() {
             break;
 
         case datasets::kCircle:
+            N=500;
             for (auto i = 0; i < 2 * N; ++i) {
                 std::vector<double> x;
-                auto x1=frandom->Rndm()*2-1;
-                auto x2=frandom->Rndm()*2-1;
-                x.push_back(x1);
-                x.push_back(x2);
-                fDataset.push_back(x);
-                int target = (x1*x1+x2*x2<0.3?1:-1);
-                fTarget.push_back(target);
-                classGraph[(target+1)/2]->SetPoint(nGraph[(target+1)/2]++,x1,x2);
+                auto x1 = frandom->Rndm() * 2 - 1;
+                auto x2 = frandom->Rndm() * 2 - 1;
+                if (x1 * x1 + x2 * x2 < 0.3 || x1 * x1 + x2 * x2 > 0.6) {
+                    x.push_back(x1);
+                    x.push_back(x2);
+                    fDataset.push_back(x);
+                    int target = (x1 * x1 + x2 * x2 < 0.3 ? 1 : -1);
+                    fTarget.push_back(target);
+                    classGraph[(target + 1) / 2]->SetPoint(nGraph[(target + 1) / 2]++, x1, x2);
+                }
+            }
+
+            break;
+
+        case datasets::kConcentricCircle:
+            N=1000;
+            for (auto i = 0; i < 3 * N; ++i) {
+                std::vector<double> x;
+                auto x1 = frandom->Rndm() * 2 - 1;
+                auto x2 = frandom->Rndm() * 2 - 1;
+                if (x1 * x1 + x2 * x2 < 0.4 || (x1 * x1 + x2 * x2 > 0.6 && x1 * x1 + x2 * x2 < 0.9)) {
+                    x.push_back(x1);
+                    x.push_back(x2);
+                    fDataset.push_back(x);
+                    int target = (x1 * x1 + x2 * x2 < 0.4 ? 1 : -1);
+                    fTarget.push_back(target);
+                    classGraph[(target + 1) / 2]->SetPoint(nGraph[(target + 1) / 2]++, x1, x2);
+                }
             }
 
             break;
@@ -90,13 +112,13 @@ void NeuralAnalyzer::DatasetToFile(){
 TMultiGraph * NeuralAnalyzer::GetResults() {
     TGraph *g[2];
     g[0]= new TGraph();
-    g[0]->SetMarkerColorAlpha(kRed, 0.4);
-    g[0]->SetMarkerSize(1.5);
+    g[0]->SetMarkerColorAlpha(kRed+2, 0.3);
+    g[0]->SetMarkerSize(1.8);
     g[0]->SetMarkerStyle(20);
     g[1]= new TGraph();
-    g[1]->SetMarkerColorAlpha(kCyan-3, 0.4);
+    g[1]->SetMarkerColorAlpha(kCyan-3, 0.3);
     g[1]->SetMarkerStyle(20);
-    g[1]->SetMarkerSize(1.5);
+    g[1]->SetMarkerSize(1.8);
     ReadFromFile(g, "test.csv", "infered.csv");
     fResultsGraph->Add(g[0]);
     fResultsGraph->Add(g[1]);
@@ -143,7 +165,7 @@ TMultiGraph *NeuralAnalyzer::GetDataset() {
     g[0]->SetMarkerSize(1.5);
     g[0]->SetMarkerStyle(20);
     g[1]= new TGraph();
-    g[1]->SetMarkerColor(kCyan-3);
+    g[1]->SetMarkerColor(kBlue);
     g[1]->SetMarkerStyle(20);
     g[1]->SetMarkerSize(1.5);
     ReadFromFile(g, "dataset.csv", "target.csv");

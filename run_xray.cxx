@@ -6,5 +6,5 @@
 #include "XRayMachine/XRayMachine.h"
 
 void run_xray(){
-    auto cx = XRayMachine(NeuralNet().firstLayer(3, "dataset.csv").addLayer(5).addLayer(4).lastLayer("target.csv")).fCanvas;
+    auto cx = XRayMachine(NeuralNet().firstLayer(15,"dataset.csv").addLayer(25).addLayer(25).lastLayer("target.csv")).fCanvas;
 }

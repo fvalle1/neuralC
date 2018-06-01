@@ -5,8 +5,8 @@
 
 int main() {
     std::cout << "Hello, neural net!" << std::endl;
-    NeuralNet net(5000,10,0.01,1000,20);
-    net.firstLayer(15,"dataset.csv").addLayer(10).addLayer(10).lastLayer("target.csv");
+    NeuralNet net(5000000,0.5,0.001,100000,.2);
+    net.firstLayer(25,"dataset.csv").addLayer(25).addLayer(25).addLayer(25).addLayer(20).lastLayer("target.csv");
     net.train(true);
     net.infere("test.csv");
 

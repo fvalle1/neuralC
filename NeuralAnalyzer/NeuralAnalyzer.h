@@ -14,7 +14,8 @@
 namespace datasets {
     enum datasetType {
         kGauss,
-        kCircle
+        kCircle,
+        kConcentricCircle
     };
 }
 

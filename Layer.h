@@ -12,7 +12,7 @@
 class Layer {
 public:
     Layer(){};
-    Layer(uint64_t numOfNeurons, uint64_t numOfFeatures, double learningRate, uint64_t stream);
+    Layer(uint64_t numOfNeurons, uint64_t numOfFeatures, double learningRate, uint64_t seed, uint64_t stream);
 
     std::vector<double> getOutputs();
     std::vector<Perceptron> fNeurons;
@@ -35,13 +35,15 @@ private:
 
 class InputLayer: public Layer{
 public:
-    InputLayer(uint64_t fnumOfNeurons, uint64_t inputSize, double learningRate, uint64_t stream);
+    InputLayer(uint64_t fnumOfNeurons, uint64_t inputSize, double learningRate, uint64_t seed,
+                   uint64_t stream);
 
 };
 
 class OutputLayer: public Layer{
 public:
-    explicit OutputLayer(uint64_t inputSize, double learningRate, uint64_t stream): Layer(1, inputSize, learningRate, stream) {};
+    explicit OutputLayer(uint64_t inputSize, double learningRate, uint64_t stream): Layer(1, inputSize, learningRate, 0,
+                                                                                          stream) {};
 };
 
 

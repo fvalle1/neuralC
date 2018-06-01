@@ -7,6 +7,7 @@
 
 int run_plot(){
     auto cx=new TCanvas("net", "Neural net", 10, 10, 640, 480);
+    auto cz=new TCanvas("cz", "Neural net - dataset", 10, 490, 640, 480);
     auto *analyser = new NeuralAnalyzer();
 
     auto dataset = analyser->GetDataset();
@@ -19,6 +20,9 @@ int run_plot(){
     graph->Add(results);
     graph->Add(test);
     graph->Draw("AP");
+
+    cz->cd();
+    dataset->Draw("AP");
 
     auto cy = new TCanvas("err", "Error", 650, 10, 640, 480);
     auto eplot = analyser->GetErrorGraph();

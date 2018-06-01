@@ -10,6 +10,11 @@
 #include <fstream>
 #include <sstream>
 #include <unordered_map>
+
+#if defined(_OPENMP)
+#include <omp.h>
+#endif
+
 #include "Layer.h"
 
 namespace net {
@@ -24,7 +29,7 @@ class NeuralNet {
 public:
     NeuralNet();
     NeuralNet(uint64_t iterations, double_t learningrate, double_t epsilon, uint64_t ninit,
-              uint64_t batchsize);
+              double batchsize);
 
     NeuralNet &firstLayer(uint64_t numOfNeurons, const std::vector<std::vector<double>> &input);
     NeuralNet &firstLayer(uint64_t numOfNeurons, std::string datafilename);
@@ -50,8 +55,9 @@ private:
     double_t fLearningRate;
     double_t fError;
     double_t fEpsilon;
+    double_t fBatchSize;
     uint64_t  fNinit;
-    uint64_t fBatchSize;
+    uint64_t fSeed;
     std::vector<datatype> fX;
     std::vector<double> fy;
     std::vector<Layer> fLayers;
