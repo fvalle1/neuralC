@@ -155,7 +155,7 @@ NeuralNet & NeuralNet::train(bool storeErrordata) {
                 continue;
             }
 
-            if (error > fError + 10 * fEpsilon ) {
+            if (error > fError + fEpsilon * (1 - (double_t) step/fmaxiterations )) {
 
                 //printf("\n errore:%f", error);
                 for (auto &layer: fLayers) { layer.restoreWeigths(); }
@@ -164,7 +164,7 @@ NeuralNet & NeuralNet::train(bool storeErrordata) {
                 continue;
 
             }else if (std::fabs(fError - error) < fEpsilon ) {
-                if (getAccurancy() > 0.7) {
+                if (getAccurancy() > 0.9) {
                     printf("\nFinal steps: %llu\tError: %.4f\n\n", step, error);
                     break;
                 }
