@@ -1,0 +1,4 @@
+[ libNeuralAnalyzer.dylib ]
+# List of selected classes
+class NeuralAnalyzer
+header NeuralAnalyzer/NeuralAnalyzer.h

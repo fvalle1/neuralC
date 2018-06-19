@@ -1,0 +1,4 @@
+[ libXRayMachine.dylib ]
+# List of selected classes
+class XRayMachine
+header XRayMachine/XRayMachine.h
