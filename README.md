@@ -1,5 +1,5 @@
 # neuralC
-<img src="https://github.com/gabrielefronze/neuralC/raw/master/nn.png" height="250"></img>
+<img src="https://github.com/gabrielefronze/neuralC/raw/master/nn.jpg" height="250"></img>
 ## Neural Net
 ```cpp
   NeuralNet net;
